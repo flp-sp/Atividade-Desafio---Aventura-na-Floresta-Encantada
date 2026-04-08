@@ -6,6 +6,9 @@ current_location = ""
 
 # Variáveis novas
 monster_health = 0
+MONSTER_DAMAGE = 0
+PLAYER_DAMAGE = 0
+POTION_EFFECT = 0
 
 # Mapa do jogo
 locations = {
@@ -40,7 +43,7 @@ def display_status():
 
 def main_game_loop():
     global player_name, player_health, current_location, inventory
-    global monster_health # novas variáveis
+    global monster_health, MONSTER_DAMAGE, PLAYER_DAMAGE, POTION_EFFECT # novas variáveis
 
     # Inicializacao do jogo
     player_name = input("Qual o seu nome, aventureiro? ")
@@ -50,6 +53,9 @@ def main_game_loop():
 
     # inicializações novas
     monster_health = 100
+    MONSTER_DAMAGE = 25
+    PLAYER_DAMAGE = 30
+    POTION_EFFECT= 30
 
     game_active = True
     while game_active:
@@ -102,9 +108,9 @@ def main_game_loop():
             item_to_use = action.split(" ")[1]
             if item_to_use in inventory:
                 if item_to_use == "poção pequena":
-                    player_health += 30
+                    player_health += POTION_EFFECT
                     inventory.remove(item_to_use)
-                    print("Você usou a poção e recuperou 30 de vida.")
+                    print(f"Você usou a poção e recuperou {POTION_EFFECT} de vida.")
                 elif item_to_use == "amuleto mágico":
                     print("Você usou o Amuleto Mágico! PARABÉNS, você venceu o jogo!")
                     game_active = False
@@ -115,7 +121,7 @@ def main_game_loop():
 
         elif action == "atacar": # ação nova de atacar
             if "challenge" in locations[current_location] and locations[current_location]["challenge"] == True:
-                monster_health -= 30
+                monster_health -= PLAYER_DAMAGE
                 if monster_health < 0: # garantir que a vida do monstro não seja menor que zero
                     monster_health = 0
 
@@ -131,16 +137,16 @@ def main_game_loop():
         if "challenge" in locations[current_location] and locations[current_location]["challenge"] == True:
             if monster_health > 0:
                 print("O monstro do pântano te ataca!")
-                player_health -= 25
+                player_health -= MONSTER_DAMAGE
                 if player_health < 0: # evitar que a vida do player seja < 0
                     player_health = 0
 
-                print(f"Você perdeu 25 de vida. Vida atual: {player_health}")
-                print(f"Você acertou um golpe e tirou 30 de vida do monstro. Vida atual do monstro: {monster_health}")
+                print(f"Você perdeu {MONSTER_DAMAGE} de vida. Vida atual: {player_health}")
+                print(f"Você acertou um golpe e tirou {PLAYER_DAMAGE} de vida do monstro. Vida atual do monstro: {monster_health}")
                 display_status()
             elif monster_health <= 0:
                 locations[current_location]["challenge"] = False # Desafio só acaba se o monstro morrer
-                print(f"Você acertou um golpe e tirou 30 de vida do monstro. O monstro foi derrotado")
+                print(f"Você acertou um golpe e tirou {PLAYER_DAMAGE} de vida do monstro. O monstro foi derrotado")
                 # adicionar lógica dos caminhos
                 display_status()
             else:
