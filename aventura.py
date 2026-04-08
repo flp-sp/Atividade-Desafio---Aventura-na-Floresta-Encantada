@@ -4,6 +4,9 @@ player_health = 0
 inventory = []
 current_location = ""
 
+# Variáveis novas
+monster_health = 0
+
 # Mapa do jogo
 locations = {
     "Clareira Tranquila": {
@@ -37,6 +40,7 @@ def display_status():
 
 def main_game_loop():
     global player_name, player_health, current_location, inventory
+    global monster_health # novas variáveis
 
     # Inicializacao do jogo
     player_name = input("Qual o seu nome, aventureiro? ")
@@ -44,9 +48,11 @@ def main_game_loop():
     current_location = "Clareira Tranquila"
     inventory = []
 
+    # inicializações novas
+    monster_health = 100
+
     game_active = True
     while game_active:
-        display_status()
         print(f"\nVocê está em: {current_location}")
         print(locations[current_location]["description"])
 
@@ -61,14 +67,9 @@ def main_game_loop():
         if "items" in locations[current_location] and locations[current_location]["items"]:
             print(f"Itens neste local: {", ".join(locations[current_location]["items"])}")
 
-        # Desafio no local
-        if "challenge" in locations[current_location] and locations[current_location]["challenge"] == True:
-            print("Um monstro do pântano te ataca!")
-            player_health = player_health - 30
-            print(f"Você perdeu 30 de vida. Vida atual: {player_health}")
-            locations[current_location]["challenge"] = False
+        # Desafio movido para depois das ações
 
-        action = input("O que você quer fazer? (andar [direção], pegar [item], usar [item], sair) ").lower().strip()
+        action = input("O que você quer fazer? (andar [direção], pegar [item], usar [item], atacar, sair) ").lower().strip()
 
         if action.startswith("andar "):
             parts = action.split(" ")
@@ -101,9 +102,9 @@ def main_game_loop():
             item_to_use = action.split(" ")[1]
             if item_to_use in inventory:
                 if item_to_use == "poção pequena":
-                    player_health += 20
+                    player_health += 30
                     inventory.remove(item_to_use)
-                    print("Você usou a poção e recuperou 20 de vida.")
+                    print("Você usou a poção e recuperou 30 de vida.")
                 elif item_to_use == "amuleto mágico":
                     print("Você usou o Amuleto Mágico! PARABÉNS, você venceu o jogo!")
                     game_active = False
@@ -112,12 +113,39 @@ def main_game_loop():
             else:
                 print("Você não tem este item no seu inventário.")
 
+        elif action == "atacar": # ação nova de atacar
+            if "challenge" in locations[current_location] and locations[current_location]["challenge"] == True:
+                monster_health -= 30
+                if monster_health < 0: # garantir que a vida do monstro não seja menor que zero
+                    monster_health = 0
+
+
         elif action == "sair":
             game_active = False
             print("Você decidiu sair da Floresta Encantada. Até a próxima!")
 
         else:
             print("Comando inválido.")
+
+        # Desafio no local
+        if "challenge" in locations[current_location] and locations[current_location]["challenge"] == True:
+            if monster_health > 0:
+                print("O monstro do pântano te ataca!")
+                player_health -= 25
+                if player_health < 0: # evitar que a vida do player seja < 0
+                    player_health = 0
+
+                print(f"Você perdeu 25 de vida. Vida atual: {player_health}")
+                print(f"Você acertou um golpe e tirou 30 de vida do monstro. Vida atual do monstro: {monster_health}")
+                display_status()
+            elif monster_health <= 0:
+                locations[current_location]["challenge"] = False # Desafio só acaba se o monstro morrer
+                print(f"Você acertou um golpe e tirou 30 de vida do monstro. O monstro foi derrotado")
+                # adicionar lógica dos caminhos
+                display_status()
+            else:
+                display_status()
+                
 
         # Condicoes de fim de jogo
         if player_health <= 0:
