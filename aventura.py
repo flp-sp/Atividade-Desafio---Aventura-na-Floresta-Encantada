@@ -96,7 +96,7 @@ def main_game_loop():
                 print("Por favor, especifique uma direção para andar.")
 
         elif action.startswith("pegar "):
-            item_to_pick = action.split(" ")[1]
+            item_to_pick = action.split(" ")[1] # slice mal feito
             if "items" in locations[current_location] and item_to_pick in locations[current_location]["items"]:
                 inventory.append(item_to_pick)
                 locations[current_location]["items"].remove(item_to_pick)
