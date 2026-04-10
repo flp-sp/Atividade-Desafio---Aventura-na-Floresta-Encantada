@@ -21,6 +21,7 @@ locations = {
         "description": "Uma trilha estreita serpenteia pela floresta. Você pode ir para o Oeste ou Norte.",
         "west": "Clareira Tranquila",
         "north": "Caverna Sombria"
+        "south": "Pântano Misterioso"
     },
     "Caverna Sombria": {
         "description": "Uma caverna escura e úmida. Há um brilho fraco no fundo. Você pode voltar para o Sul.",
@@ -38,7 +39,7 @@ def display_status():
     print("\n--- Status do Jogador ---")
     print(f"Nome: {player_name}")
     print(f"Vida: {player_health}")
-    print(f"Inventário: {", ".join(inventory) if inventory else "Vazio"}")
+    print(f"Inventário: {', '.join(inventory) if inventory else 'Vazio'}")
     print("------------------------")
 
 def main_game_loop():
@@ -67,7 +68,7 @@ def main_game_loop():
         for direction in ["north", "south", "east", "west"]:
             if direction in locations[current_location]:
                 exits.append(direction.capitalize())
-        print(f"Saídas disponíveis: {", ".join(exits)}")
+        print(f"Saídas disponíveis: {', '.join(exits)}")
 
         # Itens no local
         if "items" in locations[current_location] and locations[current_location]["items"]:
@@ -108,7 +109,7 @@ def main_game_loop():
             item_to_use = action.split(" ",1)[1]
             if item_to_use in inventory:
                 if item_to_use == "poção pequena":
-                    player_health += POTION_EFFECT
+                    player_health = min(100, player_health + POTION_EFFECT)
                     inventory.remove(item_to_use)
                     print(f"Você usou a poção e recuperou {POTION_EFFECT} de vida.")
                 elif item_to_use == "amuleto mágico":
