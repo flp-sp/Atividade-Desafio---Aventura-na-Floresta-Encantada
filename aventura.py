@@ -1,3 +1,4 @@
+import os
 # Variaveis globais do jogo - CUIDADO: Nao use variaveis globais em projetos grandes!
 player_name = ""
 player_health = 0
@@ -20,21 +21,20 @@ locations = {
     "Caminho da Floresta": {
         "description": "Uma trilha estreita serpenteia pela floresta. Você pode ir para o Oeste ou Norte.",
         "west": "Clareira Tranquila",
-        "north": "Caverna Sombria",
-        "south": "Pântano Misterioso"
+        "north": "Pântano Misterioso"
     },
     "Caverna Sombria": {
-        "description": "Uma caverna escura e úmida. Há um brilho fraco no fundo. Você pode voltar para o Sul.",
-        "south": "Caminho da Floresta",
+        "description": "Uma caverna escura e úmida. Há um brilho fraco no fundo. Você pode voltar para o Oeste.",
+        "west": "Pântano Misterioso",
         "items": ["amuleto mágico"]
     },
     "Pântano Misterioso": {
-        "description": "Um pântano denso e perigoso. Você sente um arrepio. Há um caminho para o Leste.",
-        "east": "Clareira Tranquila",
-        "challenge": True # Novo desafio
+        "description": "Um pântano denso e perigoso. Você sente um arrepio. Há um caminho para o Sul.",
+        "south": "Caminho da Floresta",
+        # adicionar chave do leste para a caverna sombria quando derrotar o monstro
+        "challenge": True
     }
 }
-
 def display_status():
     print("\n--- Status do Jogador ---")
     print(f"Nome: {player_name}")
@@ -60,6 +60,7 @@ def main_game_loop():
 
     game_active = True
     while game_active:
+        os.system('cls' if os.name == 'nt' else 'clear')
         print(f"\nVocê está em: {current_location}")
         print(locations[current_location]["description"])
 
@@ -152,6 +153,8 @@ def main_game_loop():
                 display_status()
             else:
                 display_status()
+        else:
+            display_status()
                 
 
         # Condicoes de fim de jogo
