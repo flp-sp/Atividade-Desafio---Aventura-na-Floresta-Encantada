@@ -47,6 +47,7 @@ def main_game_loop():
     global monster_health, MONSTER_DAMAGE, PLAYER_DAMAGE, POTION_EFFECT # novas variáveis
 
     # Inicializacao do jogo
+    os.system('cls' if os.name == 'nt' else 'clear')
     player_name = input("Qual o seu nome, aventureiro? ")
     player_health = 100
     current_location = "Clareira Tranquila"
@@ -59,8 +60,10 @@ def main_game_loop():
     POTION_EFFECT= 30
 
     game_active = True
+
+    display_status()
+    
     while game_active:
-        os.system('cls' if os.name == 'nt' else 'clear')
         print(f"\nVocê está em: {current_location}")
         print(locations[current_location]["description"])
 
@@ -78,6 +81,8 @@ def main_game_loop():
         # Desafio movido para depois das ações
 
         action = input("O que você quer fazer? (andar [direção], pegar [item], usar [item], atacar, sair) ").lower().strip()
+
+        os.system('cls' if os.name == 'nt' else 'clear')
 
         if action.startswith("andar "):
             parts = action.split(" ")
@@ -126,6 +131,8 @@ def main_game_loop():
                 monster_health -= PLAYER_DAMAGE
                 if monster_health < 0: # garantir que a vida do monstro não seja menor que zero
                     monster_health = 0
+                else:
+                    print(f"Você acertou um golpe e tirou {PLAYER_DAMAGE} de vida do monstro. Vida atual do monstro: {monster_health}")
 
 
         elif action == "sair":
@@ -144,12 +151,12 @@ def main_game_loop():
                     player_health = 0
 
                 print(f"Você perdeu {MONSTER_DAMAGE} de vida. Vida atual: {player_health}")
-                print(f"Você acertou um golpe e tirou {PLAYER_DAMAGE} de vida do monstro. Vida atual do monstro: {monster_health}")
                 display_status()
             elif monster_health <= 0:
                 locations[current_location]["challenge"] = False # Desafio só acaba se o monstro morrer
                 print(f"Você acertou um golpe e tirou {PLAYER_DAMAGE} de vida do monstro. O monstro foi derrotado")
-                # adicionar lógica dos caminhos
+                locations["Pântano Misterioso"]["description"] = "Um pântano denso e perigoso. Você sente um arrepio. Há um caminho para o Sul e um para o Leste(NOVO)."
+                locations["Pântano Misterioso"]["east"] = "Caverna Sombria"
                 display_status()
             else:
                 display_status()
