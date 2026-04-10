@@ -96,7 +96,7 @@ def main_game_loop():
                 print("Por favor, especifique uma direção para andar.")
 
         elif action.startswith("pegar "):
-            item_to_pick = action.split(" ")[1] # slice mal feito
+            item_to_pick = action.split(" ",1)[1] # slice mal feito
             if "items" in locations[current_location] and item_to_pick in locations[current_location]["items"]:
                 inventory.append(item_to_pick)
                 locations[current_location]["items"].remove(item_to_pick)
@@ -105,7 +105,7 @@ def main_game_loop():
                 print("Este item não está aqui.")
 
         elif action.startswith("usar "):
-            item_to_use = action.split(" ")[1]
+            item_to_use = action.split(" ",1)[1]
             if item_to_use in inventory:
                 if item_to_use == "poção pequena":
                     player_health += POTION_EFFECT
