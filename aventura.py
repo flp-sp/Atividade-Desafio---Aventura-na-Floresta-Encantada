@@ -20,7 +20,7 @@ locations = {
     "Caminho da Floresta": {
         "description": "Uma trilha estreita serpenteia pela floresta. Você pode ir para o Oeste ou Norte.",
         "west": "Clareira Tranquila",
-        "north": "Caverna Sombria"
+        "north": "Caverna Sombria",
         "south": "Pântano Misterioso"
     },
     "Caverna Sombria": {
